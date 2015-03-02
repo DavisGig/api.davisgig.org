@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from flask.ext.cors import CORS
+from werkzeug.contrib.fixers import ProxyFix
 
 app = Flask(__name__)
 CORS(app, resources=r'/api/*', allow_headers='Content-Type')
@@ -39,6 +40,8 @@ def stats():
         'contacts': db.contacts.count(),
         'households': len(db.contacts.distinct('ip_addr'))
     })
+
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
