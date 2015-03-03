@@ -25,8 +25,8 @@ def sign_up():
     data = request.json
 
     user = {
-        'first':   data['first'],
-        'last':    data['last'],
+        'first':   data['firstName'],
+        'last':    data['lastName'],
         'email':   data['email'],
         'ip_addr': request.remote_addr
     }
