@@ -22,18 +22,16 @@ def ping():
 def sign_up():
     data = request.json
 
-    first = data['first']
-    last  = data['last']
-    email = data['email']
-    ip_addr = request.remote_addr
+    user = {
+        'first':   data['first'],
+        'last':    data['last'],
+        'email':   data['email'],
+        'ip_addr': request.remote_addr
+    }
 
-    db.contacts.insert({
-        'first': first,
-        'last': last,
-        'email': email,
-        'ip_addr': ip_addr})
+    db.contacts.insert(user)
 
-    return jsonify({'user': {'first': first, 'last': last, 'email': email, 'ip_addr': ip_addr}})
+    return jsonify({"success": True})
 
 @app.route('/api/stats')
 def stats():
