@@ -36,7 +36,8 @@ def sign_up():
 @app.route('/api/stats')
 def stats():
     return jsonify({
-        'contacts': db.contacts.count()
+        'contacts': db.contacts.count(),
+        'households': len(db.contacts.distinct('ip_addr'))
     })
 
 if __name__ == "__main__":
