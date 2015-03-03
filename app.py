@@ -5,6 +5,7 @@ from werkzeug.contrib.fixers import ProxyFix
 app = Flask(__name__)
 CORS(app, resources=r'/api/*', allow_headers='Content-Type')
 
+import sys
 import os
 
 host = os.environ['DB_PORT_27017_TCP_ADDR']
@@ -44,4 +45,13 @@ def stats():
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    host_ip = '0.0.0.0'
+
+    if len(sys.argv) == 2:
+        host_ip = sys.argv[1]
+    elif 'HOST_IP_ADDR' in os.environ:
+        host_ip = os.environ['HOST_IP_ADDR']
+
+    print('starting api server on {}'.format(host_ip))
+
+    app.run(host=host_ip, debug=True)
