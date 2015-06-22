@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
 from flask.ext.cors import CORS
 from werkzeug.contrib.fixers import ProxyFix
+import urllib
+import urllib2
 
 app = Flask(__name__)
 CORS(app, resources=r'/api/*', allow_headers='Content-Type')
@@ -10,6 +12,7 @@ import os
 
 host = os.environ['DB_PORT_27017_TCP_ADDR']
 port = os.environ['DB_PORT_27017_TCP_PORT']
+mailman_url = 'http://list.davisgig.org/mailman/subscribe/davisgig-announce'
 
 from pymongo import MongoClient
 
@@ -32,6 +35,11 @@ def sign_up():
     }
 
     db.contacts.insert(user)
+    urllib2.urlopen(urllib2.Request(mailman_url, urllib.urlencode({
+        'email':    data['email'],
+        'fullname': ' '.join([data['firstName'], data['lastName']]),
+        'digest':   '0'
+    })))
 
     return jsonify({"success": True})
 
